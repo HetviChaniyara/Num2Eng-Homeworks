@@ -1,0 +1,11 @@
+# Ignore virtual environment
+Homework_01/venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore system files (Windows)
+Thumbs.db
+.DS_Store
