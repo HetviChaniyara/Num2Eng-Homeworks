@@ -85,14 +85,10 @@ def get_rhs_diag(f,N,x,dx):
 
     # compute diagonals of matrix and store each of them in a vector,
     # which we will use later on to set up the matrix
-    # l = -1.0*np.ones(N-1)## TODO
-    # d = 2.0*np.ones(N)## TODO
-    # r = -1.0*np.ones(N-1)## TODO
-
+    # TODO
     l = -1/dx**2*np.ones(N-1)
     d = 2/dx**2*np.ones(N)
     r = -1/dx**2*np.ones(N-1)
-
 
     return rhs, l, d, r
 
@@ -244,21 +240,4 @@ if __name__ == '__main__':
     plt.tight_layout()
     plt.show()
 
-    # # Plot for part d
-    # plt.figure()
-    # eps = 1e-6
-    # plt.loglog(N_vec, t_solution_vec + eps, 'o-', label=f'{solver_type} solver runtime')
-
-    # # Adding reference line
-    # N_ref = np.linspace(320, 1280, 100)
-    # t_ref = t_solution_vec[5] * (N_ref / N_vec[5])**3
-    # plt.loglog(N_ref, t_ref, 'k--', label='O(N^3) reference')
-
-    # plt.xlabel('Number of unknowns N', fontsize=12)
-    # plt.ylabel('Solution time (s)', fontsize=12)
-    # plt.title(f'Runtime of {solver_type} solver', fontsize=14)
-    # plt.legend()
-    # plt.grid(True, which="both", ls="--", alpha=0.7)
-    # plt.tight_layout()
-    # plt.show()
-
+    
