@@ -43,7 +43,7 @@ def define_default_parameters():
     parameters = {}
 
     # nrefine: how many refinements do we do?
-    parameters["Nrefine"] = 4
+    parameters["Nrefine"] = 6
 
     # N: number of inner grid points (on coarsest grid)
     parameters["N"] = 20
@@ -80,12 +80,19 @@ def graph(U_comp, x_plot, uexact, xL, xR):
 def get_rhs_diag(f,N,x,dx):
     # create right-hand-side vector
     rhs = f(x[1:-1]) ## TODO - since boundary conditions are 0, they do not matter here
-    
+    rhs[0] += 0/dx**2
+    rhs[1] += 0/dx**2
+
     # compute diagonals of matrix and store each of them in a vector,
     # which we will use later on to set up the matrix
-    l = -1.0*np.ones(N-1)## TODO
-    d = 2.0*np.ones(N)## TODO
-    r = -1.0*np.ones(N-1)## TODO
+    # l = -1.0*np.ones(N-1)## TODO
+    # d = 2.0*np.ones(N)## TODO
+    # r = -1.0*np.ones(N-1)## TODO
+
+    l = -1/dx**2*np.ones(N-1)
+    d = 2/dx**2*np.ones(N)
+    r = -1/dx**2*np.ones(N-1)
+
 
     return rhs, l, d, r
 
@@ -108,7 +115,7 @@ def my_driver(solver_type, testproblem, parameters, N):
     solution_right = uexact(xR)
 
     rhs, l, d, r = get_rhs_diag(f,N,x,dx)
-    rhs = (dx**2)*rhs # Had to add
+    # rhs = (dx**2)*rhs # Had to add
     # solve with full matrix
     if solver_type == "full":
         # create full matrix
@@ -167,7 +174,7 @@ if __name__ == '__main__':
     # Options:
     # 'const': constant right-hand-side function
     # 'sin': sine right-hand-side function
-    testfunction = 'sin'
+    testfunction = 'const'
 
     # Choose limiter:
     # Options:
@@ -222,12 +229,36 @@ if __name__ == '__main__':
     plt.figure()
     plt.loglog(h_vec, errLmax_vec, 'o-', label='Lmax error')
 
-    # Reference
+    # Reference Lines
     # First-order: O(h)
     plt.loglog(h_vec, h_vec, 'k--', label='O(h)')
     # Second-order: O(h^2)
     plt.loglog(h_vec, h_vec**2, 'r--', label='O(h^2)')
 
+    plt.xlabel('log$_{10}$(Grid spacing $h$)', fontsize=12)
+    plt.ylabel('log$_{10}$(Maximum error $||u - u_h||_\\infty$)', fontsize=12)
+    plt.title('Convergence of the Full Matrix Solver (log–log scale)', fontsize=14)
+
     plt.legend()
-    plt.title('Convergence of Lmax error')
+    plt.grid(True, which="both", ls="--", alpha=0.7)
+    plt.tight_layout()
     plt.show()
+
+    # # Plot for part d
+    # plt.figure()
+    # eps = 1e-6
+    # plt.loglog(N_vec, t_solution_vec + eps, 'o-', label=f'{solver_type} solver runtime')
+
+    # # Adding reference line
+    # N_ref = np.linspace(320, 1280, 100)
+    # t_ref = t_solution_vec[5] * (N_ref / N_vec[5])**3
+    # plt.loglog(N_ref, t_ref, 'k--', label='O(N^3) reference')
+
+    # plt.xlabel('Number of unknowns N', fontsize=12)
+    # plt.ylabel('Solution time (s)', fontsize=12)
+    # plt.title(f'Runtime of {solver_type} solver', fontsize=14)
+    # plt.legend()
+    # plt.grid(True, which="both", ls="--", alpha=0.7)
+    # plt.tight_layout()
+    # plt.show()
+
