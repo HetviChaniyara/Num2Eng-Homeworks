@@ -50,7 +50,7 @@ def define_default_parameters():
     parameters["max_steps"] = 10000
 
     # CFL: CFL number used
-    parameters["CFL"] = 0.8 # Change Here for question d
+    parameters["CFL"] = 1.2 # Change Here for question d
 
     # plot_freq: how often do we plot?
     parameters["plot_freq"] = 1
@@ -79,7 +79,7 @@ def graph_solution(U, x, time, uexact, xL, xR, method, initialize, final_time):
     plt.ylabel('u')
     plt.xlim(xL, xR)
 
-    if final_time == 1:
+    if final_time==1:
         plt.figure(2)
         plt.plot(x[1:-1], U_comp, 'r.', markersize=4, label='computed solution')
 
@@ -89,11 +89,11 @@ def graph_solution(U, x, time, uexact, xL, xR, method, initialize, final_time):
         plt.ylabel('u')
         plt.xlim(xL, xR)
         plt.legend()
-        save_str = 'results/' + method + '.eps'
+        save_str = 'results/' + method + '.png'
         plt.savefig(save_str)
 
     plt.show()
-    plt.pause(0.01)
+    plt.pause(0.1)
     plt.clf()
 
 
@@ -251,7 +251,7 @@ def main():
     # Options:
     # 'FTCS'  : forward time central space
     # 'upwind': upwind scheme 
-    method = 'FTCS'
+    method = 'upwind'
 
     # read in test problem:
     testproblem = get_testproblem()
