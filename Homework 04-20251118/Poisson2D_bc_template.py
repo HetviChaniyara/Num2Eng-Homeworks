@@ -252,7 +252,7 @@ if __name__ == '__main__':
     # 'poly': polynomial right-hand-side function
     # 'sin': sine right-hand-side function with zero bc
     # 'sin_bc': sine right-hand-side function with non-zero bc
-    testfunction = 'poly'
+    testfunction = 'sin_bc'
 
     # read in test problem:
     testproblem = get_testproblem(testfunction)
