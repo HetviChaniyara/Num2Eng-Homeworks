@@ -159,17 +159,17 @@ def get_matrix_rhs(N, h, X, Y, f, xL, xR, yB, yT, aL, aR, aB, aT):
 
     # Add the boundary conditions where needed = at points near the boundary
     ### TODO     
-    # left boundary (k=1)
-    rhs[:, 0] += aL[1:N+1] / (h**2)
+    boundaryL, boundaryR, boundaryB, boundaryT = get_boundary_separate(h, xL, xR, yB, yT, X, Y, flag="interior")
+    # The term aL_slice[:, None] reshapes the (N,) array to (N, 1) for column-wise broadcasting.
+    rhs[boundaryL] += aL[1:N+1] / (h**2)
 
-    # right boundary (k=N)
-    rhs[:, N-1] += aR[1:N+1] / (h**2) 
+    rhs[boundaryR] += aR[1:N+1] / (h**2)
     
-    # bottom boundary (l=1)
-    rhs[0, :] += aB[1:N+1] / (h**2)
+    rhs[boundaryB] += aB[1:N+1] / (h**2)
     
-    # top boundary (l=N)
-    rhs[N-1, :] += aT[1:N+1] / (h**2) 
+    rhs[boundaryT] += aT[1:N+1] / (h**2)
+
+    
     #### end TODO
 
     # Transform rhs into lexicographically ordered vector
@@ -216,6 +216,7 @@ def my_driver(testproblem, parameters, N):
 
     # Fill the full solution vector with the boundary condition
     ## TODO 
+    
     # Left boundary (x=xL, column 0)
     solution_full[:, 0] = aL 
     # Right boundary (x=xR, column N+1)
