@@ -132,23 +132,16 @@ def get_boundary_separate(h,xL,xR,yB,yT,X,Y,flag):
 
 def get_boundary_values(h, xL, xR, yB, yT, X_full, Y_full, gL, gR, gB, gT):
     ### TODO 
-    # Get the points on to the boundary to evaluate the boundary functions
+    x_coords = X_full[0, :] # x-coordinates (0 to 1) for B/T boundaries
+    y_coords = Y_full[:, 0] # y-coordinates (0 to 1) for L/R boundaries
 
-    # get the bounday indices using the function already provided
-    boundaryL, boundaryR, boundaryB, boundaryT = get_boundary_separate(h,xL,xR,yB,yT,X_full,Y_full,"boundary")
+    # Evaluate boundary functions gL/gR on y-coordinates (size N+2)
+    aL = gL(y_coords) 
+    aR = gR(y_coords)
 
-    # initialize arrays aL,aR,aB,aT
-    aL = np.zeros_like(X_full)
-    aR = np.zeros_like(X_full)
-    aB = np.zeros_like(Y_full)
-    aT = np.zeros_like(Y_full)
-
-    # obtaining the value for where the whole boundary array
-    aL[boundaryL] = gL(Y_full[boundaryL])
-    aR[boundaryR] = gR(Y_full[boundaryR])
-    aB[boundaryB] = gB(X_full[boundaryB])
-    aT[boundaryT] = gT(X_full[boundaryT])
-
+    # Evaluate boundary functions gB/gT on x-coordinates (size N+2)
+    aB = gB(x_coords)
+    aT = gT(x_coords)
     ### end TODO
 
     return aL, aR, aB, aT
@@ -167,16 +160,16 @@ def get_matrix_rhs(N, h, X, Y, f, xL, xR, yB, yT, aL, aR, aB, aT):
     # Add the boundary conditions where needed = at points near the boundary
     ### TODO     
     # left boundary (k=1)
-    rhs[:, 0] += aL[1:N+1, 0] / (h**2)
+    rhs[:, 0] += aL[1:N+1] / (h**2)
 
     # right boundary (k=N)
-    rhs[:, N-1] += aR[1:N+1, N+1] / (h**2)
+    rhs[:, N-1] += aR[1:N+1] / (h**2) 
     
     # bottom boundary (l=1)
-    rhs[0, :] += aB[0, 1:N+1] / (h**2)
+    rhs[0, :] += aB[1:N+1] / (h**2)
     
     # top boundary (l=N)
-    rhs[N-1, :] += aT[N+1, 1:N+1] / (h**2)
+    rhs[N-1, :] += aT[1:N+1] / (h**2) 
     #### end TODO
 
     # Transform rhs into lexicographically ordered vector
@@ -223,8 +216,14 @@ def my_driver(testproblem, parameters, N):
 
     # Fill the full solution vector with the boundary condition
     ## TODO 
-    boundary_values = aL + aR + aB + aT # to account for corner points having two boundary values 
-    solution_full[boundaries] = boundary_values[boundaries]
+    # Left boundary (x=xL, column 0)
+    solution_full[:, 0] = aL 
+    # Right boundary (x=xR, column N+1)
+    solution_full[:, N+1] = aR 
+    # Bottom boundary (y=yB, row 0)
+    solution_full[0, :] = aB
+    # Top boundary (y=yT, row N+1)
+    solution_full[N+1, :] = aT
     ## End TODO 
 
     # plot
