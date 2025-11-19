@@ -1,6 +1,7 @@
 # Ignore virtual environment
 Homework_01/venv/
-
+venv/
+.venv/
 # Ignore Python cache files
 __pycache__/
 *.pyc

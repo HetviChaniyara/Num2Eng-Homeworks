@@ -2,6 +2,9 @@
 Numerical Mathematics for Engineers II WS 25/26
 Homework 02 Exercise 2.3
 1D heat equation
+
+Group 11
+Hetvi Chaniyara, Nelleke Kortleven, Hande Pamuksuz
 """
 
 import matplotlib.pyplot as plt
