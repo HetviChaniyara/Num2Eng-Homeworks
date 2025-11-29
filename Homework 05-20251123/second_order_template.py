@@ -186,7 +186,7 @@ if __name__ == '__main__':
     print("")
 
     # Choose test problem:
-    testfunction = 'D'
+    testfunction = 'A'
 
     # read in test problem:
     testproblem = get_testproblem(testfunction)

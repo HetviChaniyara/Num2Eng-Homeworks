@@ -2,6 +2,8 @@
 Numerical Mathematics for Engineers II WS 25/26
 Homework 06 Exercise 6.3
 Theta schemes - Template
+Group 11
+Hetvi Chaniyara, Nelleke Kortleven, Hande Pamuksuz
 """
 
 import matplotlib.pyplot as plt
@@ -37,14 +39,13 @@ def define_default_parameters():
     parameters = {}
 
     # theta parameter for the theta scheme
-    parameters["theta"] = 0.
+    parameters["theta"] = 0.5
 
     # N: number of inner grid points (on coarsest grid)
     parameters["N"] = 80
 
     # N_time: number of time steps
-    parameters["N_time"] = 1400
-
+    parameters["N_time"] = 700
     # max_steps: maximal number of time steps
     parameters["max_steps"] = 10000
 
@@ -96,12 +97,44 @@ def get_fh(N,X,Y,f):
     ### TODO 
     # Initialize right hand side for the discrete system 
     # Since the Dirichlet B.C are homogeneous, rhs = source
+    fh_grid = f(X, Y)
+    fh = fh_grid.flatten() # flatten to obtain a vector of length N^2
+    
+    return fh
     ### end TODO
     
 
 def advance_time(N, h, dt, theta, fh, uh_old):
     ### TODO 
     # Assemble the reduced matrix using the Kronecker product
+    
+    # S = (-1,2,-1)
+    S = 2 * np.eye(N) - np.eye(N, k=1) - np.eye(N, k=-1)
+    
+    # Lh = 1/h^2 (I_N-1 kron S + S kron I_N-1)
+    A_h2 = np.kron(np.eye(N), S) + np.kron(S, np.eye(N))
+    
+    # compute Lh
+    Lh = (1.0 / (h**2)) * A_h2
+    
+    # Separate the unknown terms and known terms
+    # (I + tau * theta * Lh) * u_h^{k+1} = (I - tau * (1 - theta) * Lh) * u_h^k + tau * f_h
+    # A_LHS = (I + dt * theta * Lh)
+    # A_RHS = (I - dt * (1 - theta) * Lh)
+    # RHS   = A_RHS @ uh_old + dt * fh
+    #  make lhs matrix
+    A_LHS = np.eye(N*N) + dt * theta * Lh
+    
+    # make rhs matrix
+    A_RHS = np.eye(N*N) - dt * (1.0 - theta) * Lh
+    
+    # compute full rhs vector
+    RHS = A_RHS @ uh_old + dt * fh
+    
+    #solve system A_LHS * uh_new = RHS
+    uh_new = scipy.linalg.solve(A_LHS, RHS)
+    
+    return uh_new
     ### end TODO
 
 
@@ -133,7 +166,7 @@ def my_driver(testproblem, parameters, N, N_time):
 
     # initialize U
     solution_full = u0(X_full, Y_full)
-
+    uh_old = solution_full[inner].flatten()
     # Evaluate the source term at grid points 
     fh = get_fh(N, X, Y, f)
 
@@ -160,6 +193,10 @@ def my_driver(testproblem, parameters, N, N_time):
         # solution update
         # update the solution at inner points
         ## TODO
+        uh_new = advance_time(N, h, dt, theta, fh, uh_old)
+        solution_full[inner] = uh_new.reshape(N, N).flatten()
+        uh_old = uh_new
+        ## end TODO
 
         # draw graph if wished
         if (plot_freq != 0) and (j % plot_freq) == 0:
