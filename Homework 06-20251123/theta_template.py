@@ -39,13 +39,13 @@ def define_default_parameters():
     parameters = {}
 
     # theta parameter for the theta scheme
-    parameters["theta"] = 0.5
+    parameters["theta"] = 0
 
     # N: number of inner grid points (on coarsest grid)
     parameters["N"] = 80
 
     # N_time: number of time steps
-    parameters["N_time"] = 700
+    parameters["N_time"] = 1400
     # max_steps: maximal number of time steps
     parameters["max_steps"] = 10000
 
