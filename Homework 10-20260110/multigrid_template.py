@@ -23,7 +23,7 @@ def define_default_parameters():
     # "unit source": source f(x)= 1
     # "low-frequency error": source f(x)=0, lf initial guess
     # "high-frequency error": source f(x)=0, hf initial guess
-    parameters["setup"] = "unit source" 
+    parameters["setup"] = "high-frequency error" 
 
     return parameters
 

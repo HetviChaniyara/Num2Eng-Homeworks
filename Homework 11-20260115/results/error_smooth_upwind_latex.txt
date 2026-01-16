@@ -1,0 +1,2 @@
+N  & L1-err & L1-ord & Lmax-err & Lmax-ord
+50 & 4.911e-02 & -- & 7.709e-02 & --
