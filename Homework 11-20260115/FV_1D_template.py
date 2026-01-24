@@ -187,7 +187,7 @@ def my_driver(numflux, testproblem, parameters, N):
             done = 1
         time = time + dt
 
-        # do output to screen if wished
+        # do output to screen 
         if (plot_freq != 0) and (j % plot_freq) == 0:
             print('Taking time step %i: \t update from %f \t to %f' % (j, time - dt, time))
 
@@ -203,7 +203,7 @@ def my_driver(numflux, testproblem, parameters, N):
             # compute the flux using Lax-Friedrichs, FV version
             flux = LF_FV(U,N,dt,dx,f)
 
-        # advance using conservative formula
+        # using conservative formula
         # TODO
         U[1:-1] = U[1:-1] - (dt/dx) * (flux[1:] - flux[:-1])
         # draw graph if wished

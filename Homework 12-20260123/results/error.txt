@@ -1,0 +1,6 @@
+
+L1 error:
+100 	 5.683e-01 	 NaN
+
+Lmax error:
+100 	 9.891e-01 	 NaN
